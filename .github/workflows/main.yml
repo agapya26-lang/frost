@@ -1,0 +1,25 @@
+# Initialize git
+git init
+
+# Create .gitignore so build artifacts aren't uploaded
+cat > .gitignore << EOF
+target/
+*.class
+*.jar
+.idea/
+*.iml
+.DS_Store
+EOF
+
+# Add all files
+git add .
+
+# Commit
+git commit -m "Initial commit: Frost Strength SMP v1.0.0"
+
+# Add your GitHub remote (replace YOUR_USERNAME)
+git remote add origin https://github.com/YOUR_USERNAME/FrostStrengthSMP.git
+
+# Rename branch and push
+git branch -M main
+git push -u origin main
