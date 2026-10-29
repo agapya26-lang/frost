@@ -23,10 +23,21 @@ jobs:
           java-version: 17
           distribution: 'temurin'
 
-      # 3. Build with Maven (IMPORTANT: cd into FrostStrengthSMP/ where pom.xml lives)
+      # 3. Build with Maven — auto-detects where pom.xml is
       - name: Build with Maven
         run: |
-          cd FrostStrengthSMP
+          # Check if pom.xml is at repo root
+          if [ -f "pom.xml" ]; then
+            echo "Found pom.xml at repo root"
+          # Check if pom.xml is in FrostStrengthSMP subfolder
+          elif [ -f "FrostStrengthSMP/pom.xml" ]; then
+            echo "Found pom.xml in FrostStrengthSMP/"
+            cd FrostStrengthSMP
+          else
+            echo "ERROR: pom.xml not found! Here's the repo structure:"
+            find . -name "pom.xml" -maxdepth 3
+            exit 1
+          fi
           mvn clean package -DskipTests
 
       # 4. Upload the compiled .jar as a downloadable artifact
@@ -34,4 +45,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: FrostStrengthSMP-jar
-          path: FrostStrengthSMP/target/*.jar
+          path: |
+            target/*.jar
+            FrostStrengthSMP/target/*.jar
